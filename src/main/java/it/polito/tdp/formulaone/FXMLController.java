@@ -1,9 +1,12 @@
 package it.polito.tdp.formulaone;
 
 import java.net.URL;
+
 import java.util.ResourceBundle;
 
 import it.polito.tdp.formulaone.model.Model;
+import it.polito.tdp.formulaone.model.Race;
+import it.polito.tdp.formulaone.model.Season;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -22,13 +25,13 @@ public class FXMLController {
     private URL location;
 
     @FXML
-    private ComboBox<?> boxAnno;
+    private ComboBox<Season> boxAnno;
 
     @FXML
     private Button btnSelezionaStagione;
 
     @FXML
-    private ComboBox<?> boxGara;
+    private ComboBox<Race> boxGara;
 
     @FXML
     private Button btnSimulaGara;
@@ -44,11 +47,46 @@ public class FXMLController {
 
     @FXML
     void doSelezionaStagione(ActionEvent event) {
-
+    	txtResult.clear();
+    	
+    	Season stagioneSelezionata=boxAnno.getValue();
+    	if(stagioneSelezionata==null) {
+    		txtResult.appendText("SELEZIONA UNA STAGIONE PRIMA DI PROCEDERE");
+    		return;
+    	}
+    	
+    	String ritornata=model.creaGrafo(stagioneSelezionata);
+    	txtResult.appendText(ritornata);
+    	
+    	boxGara.getItems().clear();
+    	boxGara.getItems().addAll(model.ritornaVertici());
+    	
     }
 
     @FXML
     void doSimulaGara(ActionEvent event) {
+    	txtResult.clear();
+    	Race garaSelezionata=boxGara.getValue();
+    	if(garaSelezionata==null) {
+    		txtResult.appendText("DEVI SELEZIONARE UNA GARA!");
+    		return;
+    	}
+    	
+    	double probabilita=0.0;
+    	int tempoPausaSecondi=0;
+    	try {
+    		probabilita=Double.parseDouble(textInputK.getText());
+    		tempoPausaSecondi=Integer.parseInt(textInputK1.getText());
+    	}
+    	catch(NumberFormatException e) {
+    		txtResult.appendText("PARAMETRI NON VALIDI!");
+    		return;
+    	}
+    	
+    	//controllare parametri >0
+    	
+    	txtResult.appendText(model.simula(garaSelezionata,probabilita,tempoPausaSecondi));
+    	
 
     }
 
@@ -66,5 +104,7 @@ public class FXMLController {
 
 	public void setModel(Model model) {
 		this.model = model;
+		boxAnno.getItems().clear();
+		boxAnno.getItems().addAll(model.importaStagioni());
 	}
 }

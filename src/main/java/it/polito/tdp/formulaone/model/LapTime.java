@@ -1,15 +1,18 @@
 package it.polito.tdp.formulaone.model;
 
-public class LapTime {
+import java.time.LocalTime;
+
+public class LapTime implements Comparable<LapTime>{
 
 	private int raceId ; // refers to {@link Race}
-	private int driverId ; // referst to {@link Driver}
+	private DriverID driverId ; // referst to {@link Driver}
 	private int lap ;
 	// NOT: only the combination of the 3 fields (raceId, driverId, lap) is guaranteed to be unique
 	private int position ;
 	private String time ; // printable version of lap time
 	private int miliseconds ; // numerical version, sutable for computations
-	public LapTime(int raceId, int driverId, int lap, int position, String time, int miliseconds) {
+	
+	public LapTime(int raceId, DriverID driverId, int lap, int position, String time, int miliseconds) {
 		super();
 		this.raceId = raceId;
 		this.driverId = driverId;
@@ -24,10 +27,10 @@ public class LapTime {
 	public void setRaceId(int raceId) {
 		this.raceId = raceId;
 	}
-	public int getDriverId() {
+	public DriverID getDriverId() {
 		return driverId;
 	}
-	public void setDriverId(int driverId) {
+	public void setDriverId(DriverID driverId) {
 		this.driverId = driverId;
 	}
 	public int getLap() {
@@ -53,6 +56,12 @@ public class LapTime {
 	}
 	public void setMiliseconds(int miliseconds) {
 		this.miliseconds = miliseconds;
+	}
+	
+	@Override
+	public int compareTo(LapTime o) {
+		// TODO Auto-generated method stub
+		return this.getLap()-o.getLap();
 	}
 	
 	
